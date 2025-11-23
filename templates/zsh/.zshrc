@@ -188,8 +188,6 @@ export RIPGREP_CONFIG_PATH=/home/pedroren/.config/rg/config
 export EDITOR=nvim
 # cd ./trunk
 #
-export GEMINI_API_KEY="AIzaSyC65T4FZbnHave4qi5wl7t-he5ahXoUJ30"
-
 if [[ $TMUX != "" ]] then
     export TERM="tmux-256color"
 else
