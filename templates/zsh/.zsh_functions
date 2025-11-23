@@ -1,0 +1,112 @@
+# Add this function to your ~/.bashrc or ~/.bash_profile
+function svd() {
+    opts="$@"
+    svn diff "$@" | bat --paging=never --language=diff
+}
+function mcd() {
+    dir="$1"
+    mkdir -p "$dir" && cd "$dir"
+}
+
+# 搜索xls文件的内容
+function xrg() {
+    if [ -z "$1" ]; then
+        echo "usage $0 <xlsx file path>"
+        return 
+    fi
+
+    xlscat --style markdown all --file-path $1|fzf
+}
+
+function j() {
+  selected_dir=$(marks |sed 's/\x1b\[[0-9;]*m//g'| fzf --height 40% --query="$1" |awk -F '->' '{print $1}'|tr -d ' ')
+  # write $selected_dir to ~/.fzf-jump
+  echo $selected_dir > ~/.fzf-jump
+
+  # If a directory is selected, call the jump command with the selected directory
+  if [[ -n "$selected_dir" ]]; then
+    jump "$selected_dir"
+  fi
+}
+
+# 先使用rgf 然后使用nvim打开
+function rvim() {
+    rg --files|fzf --query="$1" | xargs nvim
+}
+
+svnstatus_ignore() {
+  local ignore_file="/home/pedroren/.svnignore"
+  if [[ ! -f $ignore_file ]]; then
+    echo "Ignore file '$ignore_file' does not exist."
+    return 1
+  fi
+
+  # Read patterns and join them into a single grep argument
+  local patterns
+  patterns=$(sed '/^\s*$/d' "$ignore_file" | paste -sd'|')
+
+  if [[ -z $patterns ]]; then
+    svn status
+  else
+    svn status | grep -Ev "$patterns"
+  fi
+}
+
+
+alias svs='svnstatus_ignore'
+alias svr='svn revert'
+alias svl='svn log'
+alias rgl='rg -t lua -C 2'
+alias rgg='rg -t go -C 2'
+alias vic='vim ~/.config/plog/config.json'
+alias rgf='rg --files|fzf'
+alias ls='ls -alhrt --color=always'
+alias vimdiff='nvim -d '
+# alias tmux='env TERM=screen-256color tmux'
+alias rz='/home/pedroren/.ft/ftrz'
+alias sz='/home/pedroren/.ft/ftsz'
+alias sql-formatter='sql-formatter -l mysql'
+alias xls2lua='python3 /home/pedroren/data/trunk/tool/xls2lua.py'
+alias xcat='xlscat --style markdown all --file-path'
+alias svb='svn blame -vx --ignore-eol-style --force'
+alias svu='svn update'
+alias svl='svn log'
+# alias svd='svn diff'
+alias fy='python3 ~/downloads/translator/translator.py'
+alias xcat='xlscat --style markdown all --file-path'
+# alias ctags='ctags --extras=+q'
+
+# git aliases
+alias g='git'
+alias ga='git add'
+alias gb='git branch'
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gcm='git commit -m'
+alias gco='git checkout'
+alias gcp='git cherry-pick'
+alias gcl='git clone'
+alias gs='git status'
+alias gss='git status -s'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gps='git push'
+alias gpl='git pull'
+alias docker-compose='docker compose'
+
+
+alias got="go test"
+alias gofmt="go fmt"
+
+alias ai="aichat"
+alias build="bash scripts/build.sh"
+alias builr="bash scripts/build.sh && OCTOPUS_DEV=1 ./dumper_exe -init"
+alias lobbyport="cat ~/trunk/bin/test_port.txt|grep lobby"
+
+
+zle-aichat-widget() {
+  aichat
+  zle reset-prompt
+}
+zle -N zle-aichat-widget
+bindkey '\ea' zle-aichat-widget

@@ -1,0 +1,8 @@
+require("keybindings")
+require("options")
+require("plugins")
+require("colorscheme")
+require("custom_commands")
+require("lsp_custom")
+require("ui")
+require("post")
