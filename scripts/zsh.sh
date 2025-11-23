@@ -7,7 +7,8 @@ fi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # 拷贝template配置
-cp template/zsh/.zshrc ~/
+cp templates/zsh/.zshrc ~/
+cp templates/zsh/.zsh_functions ~/
 
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions

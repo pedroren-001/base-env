@@ -8,7 +8,7 @@ else
 fi
 
 # 装一些工具
-tools=("ripgrep" "aichat" "gitui")
+tools=("ripgrep" "aichat" "gitui" "bat")
 for tool in "${tools[@]}"; do
     echo "installing $tool"
     cargo install $tool
